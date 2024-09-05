@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Restablecer tu cointraseña!</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item>
+      <ion-input class= "cambio"labelPlacement="floating" placeholder="">
+        <div slot="label">Ingresa tu Email <ion-text color="danger"></ion-text></div>
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button  [routerLink]="['/login']" expand="block" >Enviar solicitud</ion-button>
+</ion-content>
