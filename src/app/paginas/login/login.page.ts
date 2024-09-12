@@ -1,15 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,  } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { NavController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage  {
+  loginData = {
+    email: '',
+    password: ''
+  };
 
-  constructor() { }
+  constructor(private navCtrl: NavController) { }
 
-  ngOnInit() {
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      console.log('Formulario válido, enviar datos al servidor');
+      // Aquí iría la lógica para enviar los datos de inicio de sesión al servidor
+      this.navCtrl.navigateRoot('/home'); // Navega a la página de home si el login es exitoso
+    } else {
+      console.log('Formulario inválido');
+    }
   }
 
 }
