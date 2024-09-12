@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./paginas/register/register.module').then( m => m.RegisterPageModule)
   },
+  {
+    path: 'cambiar-contrasena',
+    loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule)
+  },
 ];
 
 @NgModule({
