@@ -18,7 +18,6 @@ export class LoginPage {
   onSubmit(form: NgForm) {
     if (form.valid) {
       console.log('Formulario válido, enviar datos al servidor');
-      // Aquí iría la lógica para enviar los datos de inicio de sesión al servidor
       this.navCtrl.navigateRoot('/home'); // Navega a la página de home si el login es exitoso
     } else {
       console.log('Formulario inválido');
