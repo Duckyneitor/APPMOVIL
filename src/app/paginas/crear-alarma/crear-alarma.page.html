@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Botón personalizado para regresar a la página principal -->
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/home']">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Centro de Control Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Centro de Control</ion-label>
+    </ion-item-divider>
+
+    <ion-item>
+      <ion-label>Rango de Alarma</ion-label>
+      <ion-range min="100" max="2000" step="50">
+        <ion-label slot="start">100 mts</ion-label>
+        <ion-label slot="end">2000 mts</ion-label> <!-- Cambié a 2000 mts -->
+      </ion-range>
+    </ion-item>
+
+  </ion-list> <!-- Cierre de la lista del Centro de Control -->
+
+  <!-- Cuenta Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Cuenta</ion-label>
+    </ion-item-divider>
+
+    <ion-item button>
+      <ion-label>Información de la Cuenta</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-label>Cambiar Contraseña</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-label>Cerrar Sesión</ion-label>
+    </ion-item>
+  </ion-list> <!-- Cierre de la lista de Cuenta -->
+
+  <!-- Soporte Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Soporte</ion-label>
+    </ion-item-divider>
+
+    <ion-item button>
+      <ion-label>Ayuda</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-label>Reportar un Problema</ion-label>
+    </ion-item>
+  </ion-list> <!-- Cierre de la lista de Soporte -->
+</ion-content>
