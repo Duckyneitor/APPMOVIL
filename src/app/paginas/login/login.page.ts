@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage-angular';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
   nombre: string = "";
   usuario: string = "";
@@ -17,9 +17,7 @@ export class LoginPage implements OnInit {
   isModalOpen = false;
 
   constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage) { }
-  
-  ngOnInit() {
-  }
+    
 
   // Valida que el email tenga @ y .
   validarEmail(email: string): boolean {

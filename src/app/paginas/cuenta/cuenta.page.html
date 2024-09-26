@@ -1,7 +1,13 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Mi Cuenta</ion-title>
-  </ion-toolbar>
+<ion-toolbar>
+  <!-- Botón personalizado para regresar a la página principal -->
+  <ion-buttons slot="start">
+    <ion-button [routerLink]="['/home']">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-title>Mi cuenta</ion-title>
+</ion-toolbar>
 </ion-header>
 
 <ion-content>

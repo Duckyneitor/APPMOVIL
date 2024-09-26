@@ -9,6 +9,7 @@ export class CuentaPage {
 
   password: string = "";
   email: string = "";
+  mostrarContrasena: boolean = false;
 
   constructor() {}
 

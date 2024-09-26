@@ -20,10 +20,6 @@ const routes: Routes = [
     loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule)
   },
   {
-    path: 'crear-alarma',
-    loadChildren: () => import('./paginas/crear-alarma/crear-alarma.module').then( m => m.CrearAlarmaPageModule)
-  },
-  {
     path: 'cuenta',
     loadChildren: () => import('./paginas/cuenta/cuenta.module').then( m => m.CuentaPageModule)
   },
@@ -31,6 +27,11 @@ const routes: Routes = [
     path: 'registro',
     loadChildren: () => import('./paginas/registro/registro.module').then( m => m.RegistroPageModule)
   },
+  {
+    path: 'crear-alarma',
+    loadChildren: () => import('./paginas/crear-alarma/crear-alarma.module').then( m => m.CrearAlarmaPageModule)
+  },
+
 
 
   
