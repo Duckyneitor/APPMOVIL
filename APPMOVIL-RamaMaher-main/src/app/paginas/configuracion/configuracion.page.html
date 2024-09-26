@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Botón personalizado para regresar a la página principal -->
+    <ion-buttons slot="start">
+      <ion-button (click)="goToHome()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Centro de Control Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Centro de Control</ion-label>
+    </ion-item-divider>
+
+    <ion-item>
+      <ion-label>Rango de Alarma</ion-label>
+      <ion-range min="100" max="2000" step="50" [(ngModel)]="rangoAlarma">
+        <ion-label slot="start">100 mts</ion-label>
+        <ion-label slot="end">500 mts</ion-label>
+      </ion-range>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Activar Notificaciones</ion-label>
+      <ion-toggle [(ngModel)]="notificacionesActivas"></ion-toggle>
+    </ion-item>
+
+    <ion-item button (click)="abrirCentroControl()">
+      <ion-label>Centro de Control</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Cuenta Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Cuenta</ion-label>
+    </ion-item-divider>
+
+    <!-- Botón que navega a la página Información de la Cuenta -->
+    <ion-item button [routerLink]="['/informacion-cuenta']">
+      <ion-label>Información de la Cuenta</ion-label>
+    </ion-item>
+
+    <ion-item button>
+      <ion-label>Cambiar Contraseña</ion-label>
+    </ion-item>
+
+    <ion-item button>
+      <ion-label>Cerrar Sesión</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Soporte Section -->
+  <ion-list>
+    <ion-item-divider>
+      <ion-label>Soporte</ion-label>
+    </ion-item-divider>
+
+    <ion-item button>
+      <ion-label>Ayuda</ion-label>
+    </ion-item>
+
+    <ion-item button>
+      <ion-label>Reportar un Problema</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

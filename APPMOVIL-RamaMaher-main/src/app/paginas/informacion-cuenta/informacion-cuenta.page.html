@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Información de la Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Correo: </ion-label>
+      <ion-input [(ngModel)]="correo" readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Contraseña: </ion-label>
+      <ion-input 
+        [type]="mostrarContrasena ? 'text' : 'password'" 
+        [value]="contrasena" 
+        readonly>
+      </ion-input>
+      <ion-button fill="clear" slot="end" (click)="toggleContrasena()">
+        <ion-icon [name]="mostrarContrasena ? 'eye-off' : 'eye'"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

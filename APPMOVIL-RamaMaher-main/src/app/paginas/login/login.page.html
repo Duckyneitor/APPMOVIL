@@ -1,0 +1,63 @@
+<ion-card class="cardLogin">
+  <ion-card-header class="card-header" style="text-align: center;">
+    <ion-card-title style="width: 100%;">Login</ion-card-title>
+  </ion-card-header>
+
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <!-- Campo de Email -->
+    <ion-item>
+      <ion-label position="floating" color="tertiary">Email</ion-label>
+      <ion-input
+        type="email"
+        class="label"
+        required
+        email
+        [(ngModel)]="loginData.email"
+        #email="ngModel"
+        name="email">
+      </ion-input>
+    </ion-item>
+
+    <!-- Mensajes de error para Email -->
+    <div *ngIf="email.invalid && (email.dirty || email.touched || loginForm.submitted)" style="color: red; padding-left: 16px;">
+      <small *ngIf="email.errors?.['required']">El email es requerido.</small>
+      <small *ngIf="email.errors?.['email']">Debes ingresar un email válido.</small>
+    </div>
+
+    <!-- Campo de Contraseña -->
+    <ion-item>
+      <ion-label position="floating" color="tertiary">Contraseña</ion-label>
+      <ion-input
+        type="password"
+        class="label"
+        required
+        minlength="6"
+        [(ngModel)]="loginData.password"
+        #password="ngModel"
+        name="password">
+      </ion-input>
+    </ion-item>
+
+    <!-- Mensajes de error para Contraseña -->
+    <div *ngIf="password.invalid && (password.dirty || password.touched || loginForm.submitted)" style="color: red; padding-left: 16px;">
+      <small *ngIf="password.errors?.['required']">La contraseña es requerida.</small>
+      <small *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
+    </div>
+
+    <!-- Botón de Ingresar -->
+    <ion-button 
+      expand="block"
+      type="submit"
+      [disabled]="loginForm.invalid"> <!-- Deshabilitado si el formulario es inválido -->
+      Ingresar
+    </ion-button>
+  </form>
+
+  <ion-button fill="clear" [routerLink]="['/register']">
+    ¿No tienes cuenta? Regístrate
+  </ion-button>
+
+  <ion-button fill="clear" [routerLink]="['/cambiar-contrasena']">
+    ¿Olvidaste tu contraseña?
+  </ion-button>
+</ion-card>

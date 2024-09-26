@@ -1,0 +1,34 @@
+<ion-card class="cardHome">
+  <ion-card-header class="card-header">
+    <ion-card-title>Bienvenido!</ion-card-title>
+  </ion-card-header>
+
+
+
+<ion-header>
+  <ion-button  [routerLink]="['/login']" expand="block" >Cerrar Sesion</ion-button>
+
+  <ion-toolbar color="primary">
+    <ion-title>Google maps</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- home.page.html -->
+<ion-button [routerLink]="['/alarmas']">
+  Configurar Alarma
+</ion-button>
+
+<ion-button expand="full" [routerLink]="['/configuracion']">
+  Configuración
+</ion-button>
+
+<ion-content>
+  <div class="map" #map></div>
+
+
+</ion-content>
+
+
+
+  
+
