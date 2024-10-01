@@ -11,7 +11,6 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class LoginPage {
 
-  nombre: string = "";
   usuario: string = "";
   password: string = "";
   isModalOpen = false;
@@ -69,8 +68,8 @@ export class LoginPage {
       // Si todo está bien, inicia sesión
       console.log("Inicio exitoso");
       this.mensajeExito();
-      localStorage.setItem('email', this.usuario);
-      localStorage.setItem('password',this.password)
+      this.storage.set('SessionID', true);
+      this.storage.set('password',this.password)
       this.route.navigate(["/home"]);
     }
   }
