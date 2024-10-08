@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
+import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginPage {
   password: string = "";
   isModalOpen = false;
 
-  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage) { }
+  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private loginFirebase:FirebaseLoginService) { }
     
 
   // Valida que el email tenga @ y .
@@ -66,11 +67,16 @@ export class LoginPage {
       this.MensajeError('La contraseña debe tener al menos 5 caracteres.');
     } else {
       // Si todo está bien, inicia sesión
-      console.log("Inicio exitoso");
-      this.mensajeExito();
-      this.storage.set('SessionID', true);
-      this.storage.set('password',this.password)
-      this.route.navigate(["/home"]);
+      this.loginFirebase.login(this.usuario, this.password).then(()=>{
+        console.log("Inicio exitoso");
+        this.mensajeExito();
+        this.storage.set('SessionID', true);
+        this.storage.set('password',this.password)
+        this.route.navigate(["/home"]);
+      }).catch(()=>{
+        this.MensajeError;
+      })
+
     }
   }
   
