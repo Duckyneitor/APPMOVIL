@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
+import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
 
 @Component({
   selector: 'app-registro',
@@ -14,9 +16,13 @@ export class RegistroPage implements OnInit {
   password: string = "";
   telefono: string = "";
 
-  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController) { }
+  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private access:FirebaseLoginService) { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    const storage = await this.storage.create();
+  }
+
+  
 
   // Valida que el email tenga @ y .
   validarEmail(email: string): boolean {
@@ -56,32 +62,40 @@ export class RegistroPage implements OnInit {
   }
 
   // Proceso de registro
-  registrarse() {
+  async crear_usuario(){
+    await this.access.create_user(this.nombre, this.usuario, this.password, this.telefono);
     if (this.nombre === "" || this.usuario === "" || this.password === "" || this.telefono === "") {
-      // Verifica que todos los campos estén llenos
       this.MensajeError('Por favor, complete todos los campos.');
     } else if (!this.validarEmail(this.usuario)) {
-      // Verifica si el email es válido
       this.MensajeError('Por favor, ingrese un correo electrónico válido.');
     } else if (!this.validarTelefono(this.telefono)) {
-      // Verifica si el teléfono tiene 9 dígitos
       this.MensajeError('El teléfono debe contener exactamente 9 dígitos numéricos.');
     } else if (!this.validarPassword(this.password)) {
-      // Verifica si la contraseña tiene al menos 5 caracteres
       this.MensajeError('La contraseña debe tener al menos 5 caracteres.');
     } else {
-      // Si todo es válido, registra el usuario
       this.mensajeExito();
-      
-      // Guarda los datos en localStorage
-      localStorage.setItem('nombre', this.nombre);
-      localStorage.setItem('email', this.usuario);
-      localStorage.setItem('telefono', this.telefono);
-      
-      // Evita guardar la contraseña en texto plano en localStorage para mayor seguridad
-      // localStorage.setItem('password', this.password);  // No recomendado
-
-      // Redirige a la página principal
+      this.storage.set('nombre', this.nombre);
+      this.storage.set('email', this.usuario);
+      this.storage.set('telefono', this.telefono);
+      this.storage.set('SessionID', true);
+      this.route.navigate(["/home"]);
+    }
+  }
+  registrarse() {
+    if (this.nombre === "" || this.usuario === "" || this.password === "" || this.telefono === "") {
+      this.MensajeError('Por favor, complete todos los campos.');
+    } else if (!this.validarEmail(this.usuario)) {
+      this.MensajeError('Por favor, ingrese un correo electrónico válido.');
+    } else if (!this.validarTelefono(this.telefono)) {
+      this.MensajeError('El teléfono debe contener exactamente 9 dígitos numéricos.');
+    } else if (!this.validarPassword(this.password)) {
+      this.MensajeError('La contraseña debe tener al menos 5 caracteres.');
+    } else {
+      this.mensajeExito();
+      this.storage.set('nombre', this.nombre);
+      this.storage.set('email', this.usuario);
+      this.storage.set('telefono', this.telefono);
+      this.storage.set('SessionID', true);
       this.route.navigate(["/home"]);
     }
   }

@@ -12,7 +12,7 @@ export const environment = {
     messagingSenderId:'886269941318',
     appId:'1:886269941318:android:ded68940b5a0983f8f5c47'
   },
-  googleMapsApiKey: 'AIzaSyASepA84nKnCPRu0Be3NmHk7xT66M5sWNw'
+  MAPBOX_KEY: 'pk.eyJ1IjoiY3JjeCIsImEiOiJjbTJ1azljZnQwMmM0Mmxwc2Y0ODJwazd6In0.CIgMvIZ0zWrcitVl4LCu2w'
 };
 
 /*

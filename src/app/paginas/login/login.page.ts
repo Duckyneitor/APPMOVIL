@@ -18,6 +18,10 @@ export class LoginPage {
 
   constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private loginFirebase:FirebaseLoginService) { }
     
+  async ngOnInit() {
+    const storage = await this.storage.create();
+  }
+
 
   // Valida que el email tenga @ y .
   validarEmail(email: string): boolean {
@@ -54,29 +58,23 @@ export class LoginPage {
 
   ingresar() {
     if (this.usuario === "" || this.password === "") {
-      // Muestra un mensaje si los campos están vacíos
       console.log("No pueden estar los campos vacíos");
       this.MensajeError('Por favor, complete todos los campos.');
     } else if (!this.validarEmail(this.usuario)) {
-      // Verifica que el email sea válido
       console.log("Correo electrónico no válido");
       this.MensajeError('Por favor, ingrese un correo electrónico válido.');
     } else if (!this.validarPassword(this.password)) {
-      // Verifica que la contraseña tenga al menos 5 caracteres
       console.log("Contraseña demasiado corta");
-      this.MensajeError('La contraseña debe tener al menos 5 caracteres.');
+      this.MensajeError('La contraseña debe tener al menos 6 caracteres.');
     } else {
-      // Si todo está bien, inicia sesión
       this.loginFirebase.login(this.usuario, this.password).then(()=>{
         console.log("Inicio exitoso");
         this.mensajeExito();
+        this.storage.set('email', this.usuario);
+        this.storage.set('password', this.password);
         this.storage.set('SessionID', true);
-        this.storage.set('password',this.password)
         this.route.navigate(["/home"]);
-      }).catch(()=>{
-        this.MensajeError;
-      })
-
+      });
     }
   }
   

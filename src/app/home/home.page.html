@@ -1,8 +1,13 @@
 <ion-content>
-  <!--
-  <div class="map" #map></div>-->
-  <ion-searchbar show-clear-button="focus" placeholder="Busca aquí"></ion-searchbar>
-  <ion-img class="imagen" src="assets/icon/modelo.png"></ion-img>
+
+   <div id="mapa-box"></div>
+   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+     <ion-fab-button (click)="marcarUbicacion()">
+       <ion-icon name="pin"></ion-icon>
+     </ion-fab-button>
+   </ion-fab>
+
+  
 
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">

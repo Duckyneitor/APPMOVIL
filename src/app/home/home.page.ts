@@ -1,132 +1,136 @@
-import { Component, ViewChild, ElementRef, Renderer2, OnInit, OnDestroy } from '@angular/core';
-import { GmapsService } from '../services/gmaps/gmaps.service';
-import { ActionSheetController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import mapboxgl from 'mapbox-gl';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy{
+export class HomePage implements OnInit {
+  public map!: mapboxgl.Map;
+  public style = 'mapbox://styles/mapbox/streets-v11';
+  private marcador!: mapboxgl.Marker;
+  private radioMetros: number = 500; // Radio en metros
+  private objetivo!: [number, number]; // Coordenadas objetivo
 
-  @ViewChild('map', { static: true })
-  mapElementRef!: ElementRef;
-  googleMaps: any;
-  center = { lat: 28.649944693035188, lng: 77.23961776224988};
-  map: any;
-  mapClickListener: any; 
-  markerClickListener: any;
-  markers: any[] = [];
+  constructor() {}
 
-  constructor(
-    private gmaps: GmapsService,
-    private renderer: Renderer2,
-    private actionSheetCtrl: ActionSheetController,
-  ) {}
-  
-  ngOnInit(): void { 
+  ngOnInit() {
+    this.obtenerUbicacion();
   }
 
-  ngAfterViewInit(){
-    this.loadMap();
+  ionViewWillEnter() {
+    if (!this.map) {
+      this.buildMap();
+    }
   }
 
-
-  async loadMap() {
+  async obtenerUbicacion() {
     try {
-      let googleMaps: any = await this.gmaps.loadGoogleMaps();
-      this.googleMaps = googleMaps;
-      const mapEl = this.mapElementRef.nativeElement;
-      const location = new googleMaps.latLng(this.center.lat, this.center.lng);
-      this.map = new googleMaps.Map(mapEl,{
-        center: location,
-        zoom: 12
-      });
-      this.renderer.addClass(mapEl, 'visible');
-      this.addMarker(location);
-      this.onMapClick();
-    }catch(e) {
-      console.log(e);
-    }  
+      const coordenadas = await Geolocation.getCurrentPosition();
+      console.log('Latitud ', coordenadas.coords.latitude);
+      console.log('Longitud ', coordenadas.coords.longitude);
+    } catch (error) {
+      console.error('Error al obtener la ubicación:', error);
+    }
   }
 
-  onMapClick(){
-    this.mapClickListener= this.googleMaps.event.addListener(this.map, "click", (mapsMouseEvent: { latLng: { toJSON: () => any; }; }) => {
-      console.log(mapsMouseEvent.latLng.toJSON());
-      this.addMarker(mapsMouseEvent.latLng);
+  buildMap() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY3JjeCIsImEiOiJjbTJ1azljZnQwMmM0Mmxwc2Y0ODJwazd6In0.CIgMvIZ0zWrcitVl4LCu2w';
+    
+    this.map = new mapboxgl.Map({
+      container: 'mapa-box',
+      style: this.style,
+      zoom: 14,
+      center: [-71.461371, -33.0445992]
     });
+
+    this.map.resize();
   }
 
+  async marcarUbicacion() {
+    try {
+      const coordenadas = await Geolocation.getCurrentPosition();
+      const lat = coordenadas.coords.latitude;
+      const lng = coordenadas.coords.longitude;
 
+      // Guardar la ubicación objetivo
+      this.objetivo = [lng, lat];
 
-  addMarker(location: any) {
-    let googleMaps: any = this.googleMaps;
-    const icon = {
-      url: 'assets/icon/Icon.webp',
-      scaledSize: new googleMaps.Size(50, 50),
-    }; 
-      const marker = new googleMaps.Marker({
-        position: location,
-        map: this.map,
-        icon: icon,
-        //draggable: true,
-        animation: googleMaps.animation.DROP
+      // Crear el marcador
+      if (this.marcador) this.marcador.remove(); // Remover marcador anterior si existe
+      this.marcador = new mapboxgl.Marker().setLngLat(this.objetivo).addTo(this.map);
+
+      // Dibujar un círculo para el radio
+      this.map.addSource('circle', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: this.objetivo
+              },
+              properties: null
+            }
+          ]
+        }
       });
-      this.markers.push(marker);
-      this.presentActionSheet();
-      this.markerClickListener = this.googleMaps.event.addListener(marker, 'click', () => {
-        console.log('markerclick', marker);
 
-        this.checkAndRemoveMarker(marker);
-        console.log('markers: ', this.markers);
-      })
+      this.map.addLayer({
+        id: 'circle-radius',
+        type: 'circle',
+        source: 'circle',
+        paint: {
+          'circle-radius': this.radioMetros / 2, // Radio en metros
+          'circle-color': '#007cbf',
+          'circle-opacity': 0.4
+        }
+      });
+
+      // Comenzar a verificar si se está en el radio
+      this.verificarUbicacion();
+    } catch (error) {
+      console.error('Error al marcar la ubicación:', error);
     }
-  
-    checkAndRemoveMarker(marker: { position: { lat: () => any; lng: () => any; }; }) {
-      const index = this.markers.findIndex(x => x.position.lat() == marker.position.lat() && x.position.lng() == marker.position.lng());
-      console.log('is marker already: ', index);
-      if(index >= 0) {
-        this.markers[index].setMap(null);
-        this.markers.splice(index, 1);
-        return;
+  }
+
+  async verificarUbicacion() {
+    setInterval(async () => {
+      const coordenadas = await Geolocation.getCurrentPosition();
+      const lat = coordenadas.coords.latitude;
+      const lng = coordenadas.coords.longitude;
+
+      const distancia = this.calcularDistancia([lng, lat], this.objetivo);
+
+      if (distancia <= this.radioMetros) {
+        this.sonarAlarma();
       }
-    }
+    }, 5000); // Verificar cada 5 segundos
+  }
 
-    async presentActionSheet() {
-      const actionSheet = await this.actionSheetCtrl.create({
-        header: 'Added Marker',
-        subHeader: '',
-        buttons: [
-          {
-            text: 'Remove',
-            role: 'destructive',
-            data: {
-              action: 'delete',
-            },
-          },
-          {
-            text: 'Save',
-            data: {
-              action: 'save',
-            },
-          },
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            data: {
-              action: 'cancel',
-            },
-          },
-        ],
-      });
-      await actionSheet.present();
-    }
+  calcularDistancia(coord1: [number, number], coord2: [number, number]): number {
+    const R = 6371e3; // Radio de la Tierra en metros
+    const φ1 = coord1[1] * (Math.PI / 180);
+    const φ2 = coord2[1] * (Math.PI / 180);
+    const Δφ = (coord2[1] - coord1[1]) * (Math.PI / 180);
+    const Δλ = (coord2[0] - coord1[0]) * (Math.PI / 180);
 
-    ngOnDestroy() {
-      //this.googleMaps.event.removeAllListeners();
-      if(this.mapClickListener) this.googleMaps.event.removeListener(this.mapClickListener);
-      if(this.markerClickListener) this.googleMaps.event.removeListeners(this.markerClickListener);
-    }
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
+    const distancia = R * c; // Distancia en metros
+    return distancia;
+  }
 
+  sonarAlarma() {
+    const audio = new Audio('path/to/your/alarm-sound.mp3'); // Ruta al sonido de alarma
+    audio.play();
+    alert("¡Has entrado en el área!");
+  }
 }
