@@ -36,16 +36,15 @@ export class HomePage implements OnInit {
     }
   }
 
-  buildMap() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiY3JjeCIsImEiOiJjbTJ1azljZnQwMmM0Mmxwc2Y0ODJwazd6In0.CIgMvIZ0zWrcitVl4LCu2w';
-    
+  async buildMap() {
+    const coordenadas = Geolocation.getCurrentPosition();
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWtvbWluLTkzIiwiYSI6ImNtMmtra2twNzAyYTUyam40MHJ4ZWxndXMifQ.XUUZ8mOqe4ylOSoFvKZDHQ';
     this.map = new mapboxgl.Map({
       container: 'mapa-box',
       style: this.style,
       zoom: 14,
-      center: [-71.461371, -33.0445992]
+      center: [(await coordenadas).coords.longitude, (await coordenadas).coords.latitude],
     });
-
     this.map.resize();
   }
 

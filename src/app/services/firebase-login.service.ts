@@ -23,8 +23,10 @@ export class FirebaseLoginService {
     const userCredential = await this.iniciarSession.createUserWithEmailAndPassword(email, password);
     const uid= userCredential.user?.uid;
     await this.firestore.doc(`users/${email}`).set({
-      nommbre:nombre,
+      nombre:nombre,
       email:email,
+      telefono:telefono,
+      password:password,
       uid:uid
     });
     return userCredential;
