@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'cambiar-contrasena',
     loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule),
-    canActivate:[AuthGuard]
+  
 
   },
   {
@@ -34,7 +34,6 @@ const routes: Routes = [
   {
     path: 'registro',
     loadChildren: () => import('./paginas/registro/registro.module').then( m => m.RegistroPageModule),
-    canActivate:[AuthGuard]
 
   },
   {
