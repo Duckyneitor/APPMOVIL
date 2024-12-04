@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'cambiar-contrasena',
     loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule),
-  
+    canActivate:[AuthGuard]
 
   },
   {
@@ -42,6 +42,11 @@ const routes: Routes = [
     canActivate:[AuthGuard]
 
   },
+  {
+    path: 'restablecer-contrasena',
+    loadChildren: () => import('./paginas/restablecer-contrasena/restablecer-contrasena.module').then( m => m.RestablecerContrasenaPageModule)
+  },
+
 
 
 

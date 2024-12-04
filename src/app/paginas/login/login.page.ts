@@ -4,6 +4,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
 import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
+import { ControladorService } from 'src/app/services/user-controller.service';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +15,10 @@ export class LoginPage {
 
   usuario: string = "";
   password: string = "";
+  user:any;
   isModalOpen = false;
 
-  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private loginFirebase:FirebaseLoginService) { }
+  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private loginFirebase:FirebaseLoginService, private controlador:ControladorService) { }
     
   async ngOnInit() {
     const storage = await this.storage.create();
@@ -57,7 +59,7 @@ export class LoginPage {
   }
 
   ingresar() {
-    if (this.usuario === "" || this.password === "") {
+    if (this.usuario === "" && this.password === "") {
       console.log("No pueden estar los campos vacíos");
       this.MensajeError('Por favor, complete todos los campos.');
     } else if (!this.validarEmail(this.usuario)) {
@@ -68,8 +70,12 @@ export class LoginPage {
       this.MensajeError('La contraseña debe tener al menos 6 caracteres.');
     } else {
       this.loginFirebase.login(this.usuario, this.password).then(()=>{
+        this.controlador.ObtenerDatos(this.usuario).subscribe(user=>{
+          this.user = user;
+        })
         console.log("Inicio exitoso");
         this.mensajeExito();
+        this.storage.set("DatosUsuario",{nombre:this.user.data.nombre,correo:this.user.data.email,uid:this.user.data.uid})
         this.storage.set('email', this.usuario);
         this.storage.set('password', this.password);
         this.storage.set('SessionID', true);
@@ -81,5 +87,10 @@ export class LoginPage {
   registrarse(){
     console.log("Registro");
     this.route.navigate(["/registro"]);
+  }
+
+  restablecer_contrasena(){
+    console.log("restablecer-contrasena");
+    this.route.navigate(["/restablecer-contrasena"]);
   }
 }
