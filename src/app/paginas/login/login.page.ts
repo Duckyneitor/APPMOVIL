@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
+import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
+import { ControladorService } from 'src/app/services/user-controller.service';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +13,17 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class LoginPage {
 
-  nombre: string = "";
   usuario: string = "";
   password: string = "";
+  user:any;
   isModalOpen = false;
 
-  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage) { }
+  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController, private storage: Storage, private loginFirebase:FirebaseLoginService, private controlador:ControladorService) { }
     
+  async ngOnInit() {
+    const storage = await this.storage.create();
+  }
+
 
   // Valida que el email tenga @ y .
   validarEmail(email: string): boolean {
@@ -53,30 +59,38 @@ export class LoginPage {
   }
 
   ingresar() {
-    if (this.usuario === "" || this.password === "") {
-      // Muestra un mensaje si los campos están vacíos
+    if (this.usuario === "" && this.password === "") {
       console.log("No pueden estar los campos vacíos");
       this.MensajeError('Por favor, complete todos los campos.');
     } else if (!this.validarEmail(this.usuario)) {
-      // Verifica que el email sea válido
       console.log("Correo electrónico no válido");
       this.MensajeError('Por favor, ingrese un correo electrónico válido.');
     } else if (!this.validarPassword(this.password)) {
-      // Verifica que la contraseña tenga al menos 5 caracteres
       console.log("Contraseña demasiado corta");
-      this.MensajeError('La contraseña debe tener al menos 5 caracteres.');
+      this.MensajeError('La contraseña debe tener al menos 6 caracteres.');
     } else {
-      // Si todo está bien, inicia sesión
-      console.log("Inicio exitoso");
-      this.mensajeExito();
-      localStorage.setItem('email', this.usuario);
-      localStorage.setItem('password',this.password)
-      this.route.navigate(["/home"]);
+      this.loginFirebase.login(this.usuario, this.password).then(()=>{
+        this.controlador.ObtenerDatos(this.usuario).subscribe(user=>{
+          this.user = user;
+        })
+        console.log("Inicio exitoso");
+        this.mensajeExito();
+        this.storage.set("DatosUsuario",{nombre:this.user.data.nombre,correo:this.user.data.email,uid:this.user.data.uid})
+        this.storage.set('email', this.usuario);
+        this.storage.set('password', this.password);
+        this.storage.set('SessionID', true);
+        this.route.navigate(["/home"]);
+      });
     }
   }
   
   registrarse(){
     console.log("Registro");
     this.route.navigate(["/registro"]);
+  }
+
+  restablecer_contrasena(){
+    console.log("restablecer-contrasena");
+    this.route.navigate(["/restablecer-contrasena"]);
   }
 }

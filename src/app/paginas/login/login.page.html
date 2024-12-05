@@ -14,9 +14,9 @@
         <ion-input type="password" name="password" [(ngModel)]="password"></ion-input>
       </ion-item>
   
-      <ion-text color="primary" class="forgot-password">
-        <a href="#">¿Olvidaste tu contraseña?</a>
-      </ion-text>
+      <ion-button expand="block" color="primary" (click)="restablecer_contrasena()">
+        ¿olvidaste tu contraseña?
+      </ion-button>
   
       <ion-button expand="block" color="primary" (click)="ingresar()">
         Iniciar Sesión

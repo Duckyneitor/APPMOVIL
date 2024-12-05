@@ -1,22 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
 })
-export class CuentaPage {
+export class CuentaPage implements OnInit {
 
   password: string = "";
-  email: string = "";
-  mostrarContrasena: boolean = false;
+  nombre: string = "";
+  usuario: string = "";
+  telefono: string = "";
 
-  constructor() {}
 
-  ngOnInit() {
-    this.email = localStorage.getItem('email') || '';
-    this.password = localStorage.getItem('password') || '';
+  constructor(private storage: Storage) {}
 
+  async ngOnInit() {
+    const storage = await this.storage.create();
+    this.usuario = await storage.get('email');
+    this.nombre = await storage.get('nombre');
+    this.telefono = await storage.get('telefono');
+    this.password = await storage.get('password');
   }
+
  
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "886269941318",
+    "project_id": "appmovil-df995",
+    "storage_bucket": "appmovil-df995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886269941318:android:ded68940b5a0983f8f5c47",
+        "android_client_info": {
+          "package_name": "AppMovil_2024.Duoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXGs7iu-Aq_t6ouH9Q43o7IWejUUR6ud4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

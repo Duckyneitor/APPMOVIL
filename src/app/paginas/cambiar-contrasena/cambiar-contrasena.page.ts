@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastController, AlertController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { updatePassword } from 'firebase/auth';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cambiar-contrasena',
@@ -8,55 +9,37 @@ import { ToastController, AlertController } from '@ionic/angular';
   styleUrls: ['./cambiar-contrasena.page.scss'],
 })
 export class CambiarContrasenaPage {
-  nombre: string = "";
-  usuario: string = "";
-  password: string = "";
-  isModalOpen = false;
+  newPassword: string = '';
 
-  constructor(public mensaje: ToastController, private route: Router, public alerta: AlertController) { }
+  constructor(private auth: Auth, private toastController: ToastController) {}
 
+  async changePassword() {
+    if (!this.newPassword) {
+      this.showToast('Por favor, ingresa una nueva contraseña.', 'danger');
+      return;
+    }
 
-    // Valida que el email tenga @ y .
-  validarEmail(email: string): boolean {
-     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     return emailPattern.test(email);
-  }
+    try {
+      const user = this.auth.currentUser;
+      if (!user) {
+        this.showToast('No hay usuario autenticado. Por favor, inicia sesión.', 'danger');
+        return;
+      }
 
-
-  async mensajeExito() {
-    const toast = await this.mensaje.create({
-      message: 'Inicio de sesión exitoso',
-      duration: 2000
-    });
-    toast.present();
-  }
-
-  ingresar() {
-    if (this.usuario === "") {
-      // Muestra un mensaje si los campos están vacíos
-      console.log("No pueden estar los campos vacíos");
-      this.MensajeError('Por favor, complete todos los campos.');
-    } else if (!this.validarEmail(this.usuario)) {
-      // Verifica que el email sea válido
-      console.log("Correo electrónico no válido");
-      this.MensajeError('Por favor, ingrese un correo electrónico válido.');
-    } else {
-      // Si todo está bien, inicia sesión
-      console.log("Inicio exitoso");
-      this.mensajeExito();
+      await updatePassword(user, this.newPassword);
+      this.showToast('Contraseña actualizada exitosamente.', 'success');
+    } catch (error) {
+      console.error('Error al actualizar la contraseña:', error);
+      this.showToast('No se pudo actualizar la contraseña. Intenta nuevamente.', 'danger');
     }
   }
-  async MensajeError(mensaje: string) {
-    const alert = await this.alerta.create({
-      header: 'Error',
-      subHeader: 'Error en el inicio de sesión',
-      message: mensaje,
-      buttons: ['Aceptar']
-    });
-    await alert.present();
-  }
 
-  setOpen(isOpen: boolean) {
-    this.isModalOpen = isOpen;
+  async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    toast.present();
   }
 }

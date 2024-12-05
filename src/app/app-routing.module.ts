@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
+    canActivate:[AuthGuard]
+
   },
   {
     path: '',
@@ -13,24 +16,37 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./paginas/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./paginas/login/login.module').then( m => m.LoginPageModule),
+
   },
   {
     path: 'cambiar-contrasena',
-    loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule)
+    loadChildren: () => import('./paginas/cambiar-contrasena/cambiar-contrasena.module').then( m => m.CambiarContrasenaPageModule),
+    canActivate:[AuthGuard]
+
   },
   {
     path: 'cuenta',
-    loadChildren: () => import('./paginas/cuenta/cuenta.module').then( m => m.CuentaPageModule)
+    loadChildren: () => import('./paginas/cuenta/cuenta.module').then( m => m.CuentaPageModule),
+    canActivate:[AuthGuard]
+
   },
   {
     path: 'registro',
-    loadChildren: () => import('./paginas/registro/registro.module').then( m => m.RegistroPageModule)
+    loadChildren: () => import('./paginas/registro/registro.module').then( m => m.RegistroPageModule),
+
   },
   {
     path: 'crear-alarma',
-    loadChildren: () => import('./paginas/crear-alarma/crear-alarma.module').then( m => m.CrearAlarmaPageModule)
+    loadChildren: () => import('./paginas/crear-alarma/crear-alarma.module').then( m => m.CrearAlarmaPageModule),
+    canActivate:[AuthGuard]
+
   },
+  {
+    path: 'restablecer-contrasena',
+    loadChildren: () => import('./paginas/restablecer-contrasena/restablecer-contrasena.module').then( m => m.RestablecerContrasenaPageModule)
+  },
+
 
 
 
